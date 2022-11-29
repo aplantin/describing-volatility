@@ -2,7 +2,7 @@
 
 This project aims to describe how measures of microbiome volatility depend on factors such as density of sampling (and relatedly, balanced or unbalanced data) and rarefaction. 
 
-## Datasets 
+### Datasets 
 
 To do this, we use four publicly available microbiome time series datasets: 
 
@@ -25,5 +25,5 @@ To do this, we use four publicly available microbiome time series datasets:
 
 Data access and processing is outlined in **Data_Processing.R**. Processed metadata and OTU or ASV tables are available in the **FinalDatasets** folder. 
 
-## Analyses 
+### Analyses 
 
