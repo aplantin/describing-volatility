@@ -19,5 +19,5 @@ This project aims to describe how measures of microbiome volatility depend on fa
     - 6 subjects (with at least 20 daily samples prior to BV diagnosis) 
     - 23-38 daily samples 
 
-Data access and processing is outlined in **Data_Processing.R**. 
+Data access and processing is outlined in **Data_Processing.R**. Processed metadata and OTU or ASV tables are available in the **FinalDatasets** folder. 
 
