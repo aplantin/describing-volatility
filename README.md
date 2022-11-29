@@ -1,6 +1,10 @@
 # Describing Microbiome Volatility 
 
-This project aims to describe how measures of microbiome volatility depend on factors such as density of sampling (and relatedly, balanced or unbalanced data) and rarefaction using four publicly available microbiome time series datasets: 
+This project aims to describe how measures of microbiome volatility depend on factors such as density of sampling (and relatedly, balanced or unbalanced data) and rarefaction. 
+
+## Datasets 
+
+To do this, we use four publicly available microbiome time series datasets: 
 
 1. Moving Pictures, Caporaso et al. (2011) 
     - gut microbiome 
@@ -20,4 +24,6 @@ This project aims to describe how measures of microbiome volatility depend on fa
     - 23-38 daily samples 
 
 Data access and processing is outlined in **Data_Processing.R**. Processed metadata and OTU or ASV tables are available in the **FinalDatasets** folder. 
+
+## Analyses 
 
