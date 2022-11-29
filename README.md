@@ -8,7 +8,7 @@ This project aims to describe how measures of microbiome volatility depend on fa
     - 131 and 336 daily samples 
 2. Student Microbiome Project, Flores et al. (2014) 
     - gut microbiome
-    - 58 subjects 
+    - 58 subjects (with no antibiotic treatment during the study)
     - weekly samples over the course of 3 months; 7-10 time samples per subject
 3. Healthy vaginal microbiome, Gajer et al. (2012) 
     - vaginal microbiome 
