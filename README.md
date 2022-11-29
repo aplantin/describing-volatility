@@ -16,5 +16,5 @@ This project aims to describe how measures of microbiome volatility depend on fa
     - 25-33 samples per subject, twice-weekly 
 4. Pre-bacterial vaginosis microbiome, Ravel et al. (2013) 
     - vaginal microbiome 
-    - 6 subjects used 
+    - 6 subjects (with at least 20 daily samples prior to BV diagnosis) 
     - 23-38 daily samples 
