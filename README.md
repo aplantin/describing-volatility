@@ -18,3 +18,6 @@ This project aims to describe how measures of microbiome volatility depend on fa
     - vaginal microbiome 
     - 6 subjects (with at least 20 daily samples prior to BV diagnosis) 
     - 23-38 daily samples 
+
+Data access and processing is outlined in \texttt{Data_Processing.R}. 
+
