@@ -2,6 +2,9 @@
 
 This project aims to describe how measures of microbiome volatility depend on factors such as density of sampling (and relatedly, balanced or unbalanced data) and rarefaction. 
 
+The key functions, raw datasets, data processing code, and final datasets are available in the R package MBVolDescrip. You can istall this package via: 
+
+
 ### Datasets 
 
 To do this, we use four publicly available microbiome time series datasets: 
