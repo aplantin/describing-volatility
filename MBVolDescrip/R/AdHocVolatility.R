@@ -8,6 +8,7 @@
 #' \item{AvgAbsAdditive}{Average absolute additive change in relative abundance (per taxon per subject).}
 #' \item{AvgAbsAdditiveNZ}{Average absolute additive change in relative abundance *between time points with nonzero abundances* (per taxon per subject)}
 #' \item{AvgMultNZ}{Average multiplicative change in relative abundance *between time points with nonzero abundances* (per taxon per subject)}
+#' \item{AvgNZLogFC}{Average log fold change in relative abundance *between time points with nonzero abundances* (per taxon per subject)}
 #' \item{NumPairsNZ}{For each taxon for each subject, number of pairs of consecutive time points for which the taxon had nonzero abundance at both time points.}
 #' \item{NumPairs}{Total number of pairs of time points for each subject (identical for all taxa)}  
 #' \item{PropQualChange}{Proportion of time points at which a taxon appeared or disappeared (per taxon per subject)}
@@ -90,6 +91,26 @@ summMicrobiomeVolatility <- function(mbchanges) {
     as_tibble(rownames = "taxID") %>% 
     pivot_longer(all_of(subjIDs), names_to = "subjID", values_to = "AvgMultNZ")
   
+  # Average log fold change among nonzero pairs 
+  logfc.mat <- matrix(NA, nrow=nrow(mbchanges$MultChangeMat), ncol=ncol(mbchanges$MultChangeMat))
+  logfc.mat[nzpair.mat] <- log(mbchanges$MultChangeMat[nzpair.mat])
+  rownames(logfc.mat) <- rownames(mbchanges$MultChangeMat)
+  colnames(logfc.mat) <- colnames(mbchanges$MultChangeMat)
+  logfc.res <- sapply(subjIDs, FUN = function(s) {
+    if (length(grep(s, rownames(logfc.mat))) == 0) {
+      NA
+    } else if (length(grep(s, rownames(logfc.mat))) == 1) {
+      logfc.mat[grep(s, rownames(logfc.mat)), ]
+    } else {
+      apply(logfc.mat[grep(s, rownames(logfc.mat)), ], 2, 
+            FUN = function(x) mean(x, na.rm=T))
+    }
+  })
+  logfc.res[is.nan(logfc.res)] <- NA
+  logfc <- logfc.res %>% 
+    as_tibble(rownames = "taxID") %>% 
+    pivot_longer(all_of(subjIDs), names_to = "subjID", values_to = "AvgNZLogFC")
+  
   # Number of nonzero pairs 
   nzpair.res <- sapply(subjIDs, FUN = function(s) {
     if (length(grep(s, rownames(nzpair.mat))) == 0) {
@@ -150,6 +171,7 @@ summMicrobiomeVolatility <- function(mbchanges) {
     merge(., avgadd, by=c("subjID", "taxID")) %>% 
     merge(., nzadd, by=c("subjID", "taxID")) %>% 
     merge(., nzmult, by=c("subjID", "taxID")) %>% 
+    merge(., logfc, by=c("subjID", "taxID")) %>% 
     merge(., nzpair, by=c("subjID", "taxID")) %>% 
     merge(., pairdat, by=c("subjID", "taxID")) %>% 
     merge(., qualdat, by=c("subjID", "taxID")) %>% 

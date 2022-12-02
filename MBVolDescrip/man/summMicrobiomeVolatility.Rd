@@ -14,6 +14,7 @@ Data frame containing the following columns:
 \item{AvgAbsAdditive}{Average absolute additive change in relative abundance (per taxon per subject).}
 \item{AvgAbsAdditiveNZ}{Average absolute additive change in relative abundance \emph{between time points with nonzero abundances} (per taxon per subject)}
 \item{AvgMultNZ}{Average multiplicative change in relative abundance \emph{between time points with nonzero abundances} (per taxon per subject)}
+\item{AvgNZLogFC}{Average log fold change in relative abundance \emph{between time points with nonzero abundances} (per taxon per subject)}
 \item{NumPairsNZ}{For each taxon for each subject, number of pairs of consecutive time points for which the taxon had nonzero abundance at both time points.}
 \item{NumPairs}{Total number of pairs of time points for each subject (identical for all taxa)}
 \item{PropQualChange}{Proportion of time points at which a taxon appeared or disappeared (per taxon per subject)}
