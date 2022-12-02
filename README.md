@@ -47,6 +47,37 @@ data(rav_otu); data(rav_meta)
 ```
 
 
+### Function Usage 
+
+The package provides three main functions. 
+
+    - `temporalSubsampleMeta()` identifies pairs of samples separated by the desired time spacing. 
+    - `calcMicrobiomeChanges()` calculates the additive, multiplicative, and qualitative (presence/absence) between these pairs of time points, as well as extracting the relevant distances from a distance matrix if provided. 
+    - `summMicrobiomeVolatility()` calculates several ad hoc measures of microbiome volatility. 
+    
+    
+```
+data(gaj_otu) 
+data(gaj_meta) 
+
+# Rarefying so that total read count is the same across time points and subjects 
+min_readct <- min(apply(gaj_otu, 1, sum))
+gaj_otu_rarefy <- rrarefy(gaj_otu, sample=min_readct)
+
+# Temporal change metadata (one week spacing with one day wiggle room: samples are 6-8 days apart) 
+gaj_changemeta_7 <- temporalSubsampleMeta(gaj_otu_rarefy, gaj_meta, desired_spacing = 7, 
+                                          window_width = 1, taxaAreRows = FALSE) 
+
+# Calculate distance matrix on full dataset for input to change
+gaj_D_BC <- as.matrix(vegdist(gaj_otu_rarefy, method="bray"))
+
+# Calculate microbiome changes at desired time gaps 
+gaj_changematr_7 <- calcMicrobiomeChanges(gaj_otu_rarefy, gaj_changemeta_7, 
+                                          Ds = gaj_D_BC, taxaAreRows = FALSE)
+
+# Calculate volatility summaries 
+gaj_vol_7 <- summMicrobiomeVolatility(mbchanges = gaj_changematr_7)
+```
 
 ### Analyses 
 
