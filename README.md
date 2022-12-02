@@ -49,10 +49,11 @@ data(rav_otu); data(rav_meta)
 
 ### Function Usage 
 
-The package provides three main functions. 
+The package provides four main functions. 
 
 - `temporalSubsampleMeta()` identifies pairs of samples separated by the desired time spacing. 
 - `calcMicrobiomeChanges()` calculates the additive, multiplicative, and qualitative (presence/absence) between these pairs of time points, as well as extracting the relevant distances from a distance matrix if provided. 
+- `longMicrobiomeChanges()` converts the microbiome change matrices from calcMicrobiomeChanges() into long format (rows are taxa * changeID combinations)
 - `summMicrobiomeVolatility()` calculates several ad hoc measures of microbiome volatility. 
     
     
