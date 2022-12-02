@@ -4,9 +4,10 @@ This project aims to describe how measures of microbiome volatility depend on fa
 
 The key functions, raw datasets, data processing code, and final datasets are available in the R package MBVolDescrip. You can istall this package via: 
 
+```
 library(devtools)
 devtools::install_github("aplantin/describing-volatility", subdir="MBVolDescrip")
-
+```
 
 ### Datasets 
 
@@ -29,7 +30,13 @@ To do this, we use four publicly available microbiome time series datasets:
     - 6 subjects (with at least 20 daily samples prior to BV diagnosis) 
     - 23-38 daily samples 
 
-Data access and processing is outlined in **Data_Processing.R**. Processed metadata and OTU or ASV tables are available in the **FinalDatasets** folder. 
+Processed metadata and OTU or ASV tables are available in the R package: 
+
+- Moving Pictures Gut Microbiome: mp_otu, mp_meta, mp_tree, mp_tax
+- Student Microbiome Project Gut Microbiome: smp_otu, smp_meta, smp_tax_key 
+- Gajer Vaginal Microbiome: gaj_otu, gaj_meta 
+- Ravel Vaginal Microbiome: rav_otu, rav_meta 
+
 
 ### Analyses 
 
