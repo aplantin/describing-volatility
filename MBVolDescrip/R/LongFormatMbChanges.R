@@ -22,7 +22,7 @@
 #' @export
 #' 
 #' @import tidyverse tibble 
-#' @importFrom dplyr rename all_of select
+#' @importFrom dplyr rename all_of select mutate
 #' @importFrom tidyr pivot_longer as_tibble
 #' @importFrom stats time 
 #' 
