@@ -3,7 +3,7 @@ library(tidyverse)
 library(biomformat) 
 
 filepath.metadata <- system.file("extdata", "smp_metadata.csv", package="MBVolDescrip")
-filepath.otus <- system.file("extdata", "smp_otu_table.ts_only.biom", package="MBVolDescrip")
+filepath.otus <- system.file("extdata", "smp_otu_table_gut.ts_only.biom.gz", package="MBVolDescrip")
 
 ## Read and process
 smp_metadata <- read.csv(filepath.metadata) %>% 
