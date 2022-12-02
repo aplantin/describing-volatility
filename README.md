@@ -4,6 +4,9 @@ This project aims to describe how measures of microbiome volatility depend on fa
 
 The key functions, raw datasets, data processing code, and final datasets are available in the R package MBVolDescrip. You can istall this package via: 
 
+library(devtools)
+devtools::install_github("aplantin/describing-volatility", subdir="MBVolDescrip")
+
 
 ### Datasets 
 
