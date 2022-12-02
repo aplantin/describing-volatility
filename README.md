@@ -32,10 +32,20 @@ To do this, we use four publicly available microbiome time series datasets:
 
 Processed metadata and OTU or ASV tables are available in the R package: 
 
-- Moving Pictures Gut Microbiome: mp_otu, mp_meta, mp_tree, mp_tax
-- Student Microbiome Project Gut Microbiome: smp_otu, smp_meta, smp_tax_key 
-- Gajer Vaginal Microbiome: gaj_otu, gaj_meta 
-- Ravel Vaginal Microbiome: rav_otu, rav_meta 
+```
+# Moving Pictures
+data(mp_otu); data(mp_meta); data(mp_tree); data(mp_tax)
+
+# Student Microbiome Project 
+data(smp_otu); data(smp_meta); data(smp_tax_key) 
+
+# Gajer vaginal microbiome 
+data(gaj_otu); data(gaj_meta) 
+
+# Ravel vaginal microbiome
+data(rav_otu); data(rav_meta) 
+```
+
 
 
 ### Analyses 
