@@ -73,8 +73,10 @@ gaj_changemeta_7 <- temporalSubsampleMeta(gaj_otu_rarefy, gaj_meta, desired_spac
 gaj_D_BC <- as.matrix(vegdist(gaj_otu_rarefy, method="bray"))
 
 # Calculate microbiome changes at desired time gaps 
-gaj_changematr_7 <- calcMicrobiomeChanges(gaj_otu_rarefy, gaj_changemeta_7, 
-                                          Ds = gaj_D_BC, taxaAreRows = FALSE)
+gaj_changematr_7 <- calcMicrobiomeChanges(gaj_otu_rarefy, gaj_changemeta_7, Ds = gaj_D_BC, taxaAreRows = FALSE)
+
+# Convert microbiome changes to long format (for self-chosen summaries) 
+gaj_longchange_7 <- longMicrobiomeChanges(mbchanges = gaj_changematr_7) 
 
 # Calculate volatility summaries 
 gaj_vol_7 <- summMicrobiomeVolatility(mbchanges = gaj_changematr_7)
