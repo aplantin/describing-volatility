@@ -11,7 +11,7 @@ devtools::install_github("aplantin/describing-volatility", subdir="MBVolDescrip"
 
 ### Datasets 
 
-To do this, we use four publicly available microbiome time series datasets: 
+Throughout these investigations, we use four publicly available microbiome time series datasets: 
 
 1. Moving Pictures, Caporaso et al. (2011) 
     - gut microbiome 
