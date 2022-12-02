@@ -55,7 +55,8 @@ The package provides four main functions.
 - `calcMicrobiomeChanges()` calculates the additive, multiplicative, and qualitative (presence/absence) between these pairs of time points, as well as extracting the relevant distances from a distance matrix if provided. 
 - `longMicrobiomeChanges()` converts the microbiome change matrices from calcMicrobiomeChanges() into long format (rows are taxa * changeID combinations)
 - `summMicrobiomeVolatility()` calculates several ad hoc measures of microbiome volatility. 
-    
+ 
+Using the Gajer vaginal microbiome data as an example, function usage is demonstrated below. 
     
 ```
 data(gaj_otu) 
