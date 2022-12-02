@@ -13,6 +13,6 @@ RoxygenNote: 7.2.2
 Depends: 
     R (>= 4.2.0)
 LazyData: true
-Imports: tidyverse, tidyr, tibble, stats, dplyr
+Imports: tidyverse, tidyr, tibble, dplyr
 
 

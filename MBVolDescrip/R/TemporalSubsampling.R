@@ -22,6 +22,8 @@
 #' @return New metadata file with columns subject ID, time point 1, time point 2, sample ID 1, and sample ID 2 
 #' @export
 #' 
+#' @importFrom dplyr filter arrange
+#' 
 #' 
 temporalSubsampleMeta <- function(otus, metadata, desired_spacing, window_width, taxaAreRows = FALSE) {
   

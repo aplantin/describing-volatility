@@ -15,7 +15,10 @@
 #' \item{PropTaxNZ}{Proportion of samples for which this taxon has nonzero abundance (across all subjects and samples included in mbchanges)} 
 #' @export
 #' 
-#' @import tidyverse tibble tidyr stats dplyr 
+#' @import tidyverse tibble 
+#' @importFrom dplyr rename all_of
+#' @importFrom tidyr pivot_longer as_tibble
+#' @importFrom stats time 
 #' 
 summMicrobiomeVolatility <- function(mbchanges) {
   
