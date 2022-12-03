@@ -49,7 +49,7 @@ data(rav_otu); data(rav_meta)
 
 ### Function Usage 
 
-The package provides four main functions. 
+The package provides four functions. 
 
 - `temporalSubsampleMeta()` identifies pairs of samples separated by the desired time spacing. 
 - `calcMicrobiomeChanges()` calculates the additive, multiplicative, and qualitative (presence/absence) between these pairs of time points, as well as extracting the relevant distances from a distance matrix if provided. 
