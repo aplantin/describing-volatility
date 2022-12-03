@@ -10,7 +10,6 @@ pre <- "~/AnnaDocuments/Research/Methods_indiv/2022_DescribingVolatility/"
 #source(paste0(pre, "Analyses_SamplingDensity_VolCalcs.R"))
 
 # Moving Pictures 
-mp_vol_all <- readRDS(paste0(pre, "VolSumms/mp_vol_taxlevel.rds")) 
 mp_vol_long <- mp_vol_all %>% 
   select(taxID, 
          AvgTaxAbund = AvgTaxAbund_day1, 
@@ -22,7 +21,6 @@ mp_vol_long <- mp_vol_all %>%
                values_to = "AvgAbsAdditive")
 
 # Student Microbiome Project
-smp_vol_all <- readRDS(paste0(pre, "VolSumms/smp_vol_taxlevel.rds"))
 smp_vol_long <- smp_vol_all %>% 
   select(taxID, 
          AvgTaxAbund = AvgTaxAbund_day7, 
@@ -34,7 +32,6 @@ smp_vol_long <- smp_vol_all %>%
   filter(!is.na(AvgAbsAdditive))
 
 # Gajer 
-gaj_vol_all <- readRDS(paste0(pre, "VolSumms/gaj_vol_taxlevel.rds"))
 gaj_vol_long <- gaj_vol_all %>% 
   select(taxID, 
          AvgTaxAbund = AvgTaxAbund_day3, 
@@ -45,7 +42,6 @@ gaj_vol_long <- gaj_vol_all %>%
                values_to = "AvgAbsAdditive")
 
 # Ravel 
-rav_vol_all <- readRDS(paste0(pre, "VolSumms/rav_vol_taxlevel.rds"))
 rav_vol_long <- rav_vol_all %>% 
   select(taxID, 
          AvgTaxAbund = AvgTaxAbund_day1, 

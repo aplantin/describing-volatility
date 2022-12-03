@@ -37,7 +37,7 @@ distvol_BC_all %>%
                                           "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
   ggplot() + 
   geom_violin(aes(x=TimeLag, y=BrayCurtis), width=1) + 
-  geom_boxplot(aes(x=TimeLag, y=BrayCurtis), outlier.size=0.5, width=0.1, color="grey", alpha=0.2) + 
+  geom_boxplot(aes(x=TimeLag, y=BrayCurtis), outlier.size=0.5, width=0.1) + 
   ggtitle("Intra-Subject Bray-Curtis Dissimilarity By Time Lag")  + 
   theme_bw() + 
   facet_wrap(vars(Study), nrow=1) + 

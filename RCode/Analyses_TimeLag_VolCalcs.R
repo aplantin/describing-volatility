@@ -244,3 +244,20 @@ rav_distvol <- do.call(rbind, lapply(rav_changemats, FUN = function(l) l$ChangeM
   rename(BrayCurtis=DistanceMetric) %>% 
   select(subjID, changeID, GapSize, BrayCurtis)
 
+
+
+
+#### 
+saveRDS(mp_vol_all, "VolSumms/mp_vol_all_rarefyP100.rds")
+saveRDS(mp_distvol, "VolSumms/mp_distvol_rarefyP100.rds")
+
+saveRDS(smp_vol_all, "VolSumms/smp_vol_all_rarefyP100.rds")
+saveRDS(smp_distvol, "VolSumms/smp_distvol_rarefyP100.rds")
+
+saveRDS(gaj_vol_all, "VolSumms/gaj_vol_all_rarefyP100.rds")
+saveRDS(gaj_distvol, "VolSumms/gaj_distvol_rarefyP100.rds")
+
+saveRDS(rav_vol_all, "VolSumms/rav_vol_all_rarefyP100.rds")
+saveRDS(rav_distvol, "VolSumms/rav_distvol_rarefyP100.rds")
+
+

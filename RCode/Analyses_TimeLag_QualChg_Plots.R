@@ -74,7 +74,7 @@ vol_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_vol_long),
 vol_wide <- vol_all %>% 
   pivot_wider(id_cols=Study:AvgTaxAbund, names_from=TimeLag, values_from = PropQualChange) 
 
-# Average log fold changes: 7 days vs. 3 days 
+# Average qualitative changes: 7 days vs. 3 days 
 vol_wide %>% 
   filter(!Study %in% c("Student Microbiome Project (Gut)", "Ravel (Vaginal)")) %>% 
   mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", "Gajer (Vaginal)"))) %>% 
@@ -90,7 +90,7 @@ vol_wide %>%
   theme(legend.position="none", text=element_text(size=14)) 
 
 
-# Average log fold changes: all lags vs. taxon abundance 
+# Average qualitative changes: all lags vs. taxon abundance 
 vol_all %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
