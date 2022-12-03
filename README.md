@@ -85,4 +85,4 @@ gaj_vol_7 <- summMicrobiomeVolatility(mbchanges = gaj_changematr_7)
 
 ### Analyses 
 
-The code to replicate the analyses in the manuscript is available in the RCode/ directory. 
+Code to replicate the analyses in the forthcoming manuscript is available in the RCode/ directory. 
