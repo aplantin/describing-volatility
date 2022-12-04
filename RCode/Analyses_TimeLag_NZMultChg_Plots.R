@@ -8,7 +8,7 @@ library(gridExtra)
 library(dplyr)
 pre <- "~/AnnaDocuments/Research/Methods_indiv/2022_DescribingVolatility/"
 
-#source(paste0(pre, "Analyses_SamplingDensity_VolCalcs.R"))
+source(paste0(pre, "Analyses_TimeLag_VolCalcs.R"))
 
 # Moving Pictures 
 mp_vol_long <- mp_vol_all %>% 
@@ -88,6 +88,7 @@ vol_wide %>%
 
 # Average log fold changes: all lags vs. taxon abundance 
 vol_all %>% 
+  filter(Study != "Ravel (Vaginal)") %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
@@ -130,6 +131,7 @@ longfc_all %>%
                                           "Student Microbiome Project (Gut)", 
                                           "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
   group_by(Study, TimeLag) %>% 
-  summarize(sdLogFC = sd(NZLogFC)) %>% 
+  summarize(sdLogFC = sd(NZLogFC), 
+            nPairs = n()) %>% 
   pivot_wider(names_from=TimeLag, values_from = sdLogFC) %>% 
   select(Study, `1 day`, `3 days`, `7 days`, `28 days`) 

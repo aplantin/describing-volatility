@@ -73,7 +73,7 @@ vol_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_vol_long),
 vol_all %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
-                                   "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
+                                   "Gajer (Vaginal)"))) %>% 
   ggplot() + 
   xlab("Log Average Relative Abundance") + 
   ylab("Log Average Absolute Additive Change") + 

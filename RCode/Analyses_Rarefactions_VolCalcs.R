@@ -277,15 +277,19 @@ for (rareprop in c("None", "P100", "P80", "P60")) {
   #### 
   saveRDS(mp_vol_all, paste0("VolSumms/mp_vol_all_rarefy", rareprop, ".rds"))
   saveRDS(mp_distvol, paste0("VolSumms/mp_distvol_rarefy", rareprop, ".rds"))
+  saveRDS(mp_longchange, paste0("VolSumms/mp_longchg_rarefy", rareprop, ".rds"))
   
   saveRDS(smp_vol_all, paste0("VolSumms/smp_vol_all_rarefy", rareprop, ".rds"))
   saveRDS(smp_distvol, paste0("VolSumms/smp_distvol_rarefy", rareprop, ".rds"))
+  saveRDS(smp_longchange, paste0("VolSumms/smp_longchg_rarefy", rareprop, ".rds"))
   
   saveRDS(gaj_vol_all, paste0("VolSumms/gaj_vol_all_rarefy", rareprop, ".rds"))
   saveRDS(gaj_distvol, paste0("VolSumms/gaj_distvol_rarefy", rareprop, ".rds"))
+  saveRDS(gaj_longchange, paste0("VolSumms/gaj_longchg_rarefy", rareprop, ".rds"))
   
   saveRDS(rav_vol_all, paste0("VolSumms/rav_vol_all_rarefy", rareprop, ".rds"))
   saveRDS(rav_distvol, paste0("VolSumms/rav_distvol_rarefy", rareprop, ".rds"))
-
+  saveRDS(rav_longchange, paste0("VolSumms/rav_longchg_rarefy", rareprop, ".rds"))
+  
 }
 

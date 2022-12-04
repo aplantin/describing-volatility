@@ -1,60 +1,62 @@
 ### This document .....  ###
 
 library(tidyverse)
-library(gridExtra)
+library(vegan)
+library(GUniFrac)
 library(MBVolDescrip)
 
-## Read in rarefications volatility data
-vol_all_rarefy <- readRDS(file="VolSumms/vol_all_rarefy.rds") 
+## days 1, 3, 7, 28: 3rd entry is day 7 for MP  
+mp_longchange_none <- readRDS(paste0("VolSumms/mp_longchg_rarefyNone.rds"))[[3]]
+mp_longchange_p100 <- readRDS(paste0("VolSumms/mp_longchg_rarefyP100.rds"))[[3]]
+mp_longchange_p80 <- readRDS(paste0("VolSumms/mp_longchg_rarefyP80.rds"))[[3]]
+mp_longchange_p60 <- readRDS(paste0("VolSumms/mp_longchg_rarefyP60.rds"))[[3]]
 
-## Rarefaction box plot - avg additive change vs. rarefaction % 
-vol_all_rarefy %>% 
-  mutate(Study = factor(Study, 
-                        levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
-                                   "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
-  mutate(Rarefaction = case_when(Rarefy == "None" ~ "Original", 
-                                 Rarefy == "P100" ~ "100%", 
-                                 Rarefy == "P80" ~ "80%", 
-                                 Rarefy == "P60" ~ "60%")) %>% 
-  mutate(Rarefaction = factor(Rarefaction, levels = c("Original", "100%", "80%", "60%"))) %>% 
-  ggplot() + 
-  geom_violin(aes(x=Rarefaction, y=(AvgNZLogFC_day7)), width=1) + 
-  geom_boxplot(aes(x=Rarefaction, y=(AvgNZLogFC_day7)), 
-               outlier.size=0.5, width=0.1) + 
-  xlab("Rarefaction (Percent of Minimum Read Count)") + 
-  ylab("Log Fold Change in Nonzero Abundance") + 
-  facet_wrap(vars(Study), scales="free", nrow=1) + 
-  theme_bw() + 
-  theme(text=element_text(size=14), 
-        legend.position = "bottom") + 
-  ggtitle("Log Fold Change in Nonzero Abundance by Rarefaction (7-Day Lag)")
+## day 7, day 28 (so first entry is day 7)
+smp_longchange_none <- readRDS(paste0("VolSumms/smp_longchg_rarefyNone.rds"))[[1]]
+smp_longchange_p100 <- readRDS(paste0("VolSumms/smp_longchg_rarefyP100.rds"))[[1]]
+smp_longchange_p80 <- readRDS(paste0("VolSumms/smp_longchg_rarefyP80.rds"))[[1]]
+smp_longchange_p60 <- readRDS(paste0("VolSumms/smp_longchg_rarefyP60.rds"))[[1]]
 
+## days 3, 7, 28 (2nd entry) 
+gaj_longchange_none <- readRDS(paste0("VolSumms/gaj_longchg_rarefyNone.rds"))[[2]]
+gaj_longchange_p100 <- readRDS(paste0("VolSumms/gaj_longchg_rarefyP100.rds"))[[2]]
+gaj_longchange_p80 <- readRDS(paste0("VolSumms/gaj_longchg_rarefyP80.rds"))[[2]]
+gaj_longchange_p60 <- readRDS(paste0("VolSumms/gaj_longchg_rarefyP60.rds"))[[2]]
 
-## Avg additive change vs. abundance, grouped by rarefaction % 
-vol_all_rarefy %>% 
-  mutate(Study = factor(Study, 
-                        levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
-                                   "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
-  mutate(Rarefaction = case_when(Rarefy == "None" ~ "Original", 
-                                 Rarefy == "P100" ~ "100%", 
-                                 Rarefy == "P80" ~ "80%", 
-                                 Rarefy == "P60" ~ "60%")) %>% 
-  mutate(Rarefaction = factor(Rarefaction, levels = c("Original", "100%", "80%", "60%"))) %>% 
-  ggplot() + 
-  xlab("Log Average Relative Abundance") + 
-  ylab("Log Fold Change in Nonzero Abundance") + 
-  ylim(-5,5) + 
-  geom_point(aes(x=log(AvgTaxAbund_day7), y=(AvgNZLogFC_day7),
-                 group=Rarefy, color=Rarefy), size=0.1, alpha=0.15) + 
-  geom_smooth(aes(x=log(AvgTaxAbund_day7), y=(AvgNZLogFC_day7),
-                  group=Rarefy, color=Rarefy),  
-              method = "loess", se=T) + 
-  geom_abline(slope=0, intercept=0, color="black", lty=2) + 
-  facet_wrap(vars(Study), scales="free", nrow=1) + 
-  theme_bw() + 
-  theme(text=element_text(size=14), 
-        legend.position = "bottom") + 
-  ggtitle("Log Fold Change in Nonzero Abundance by Rarefaction and Taxon Abundance")
+## days 1, 3, 7 (3rd entry) 
+rav_longchange_none <- readRDS(paste0("VolSumms/rav_longchg_rarefyNone.rds"))[[3]]
+rav_longchange_p100 <- readRDS(paste0("VolSumms/rav_longchg_rarefyP100.rds"))[[3]]
+rav_longchange_p80 <- readRDS(paste0("VolSumms/rav_longchg_rarefyP80.rds"))[[3]]
+rav_longchange_p60 <- readRDS(paste0("VolSumms/rav_longchg_rarefyP60.rds"))[[3]]
 
+## combine 
+vol_long_rarefy <- rbind(cbind(Study = "Moving Pictures (Gut)", Rarefy = "None", mp_longchange_none), 
+                         cbind(Study = "Moving Pictures (Gut)", Rarefy = "P100", mp_longchange_p100), 
+                          cbind(Study = "Moving Pictures (Gut)", Rarefy = "P80", mp_longchange_p80), 
+                          cbind(Study = "Moving Pictures (Gut)", Rarefy = "P60", mp_longchange_p60), 
+                          cbind(Study = "Student Microbiome Project (Gut)", Rarefy = "None", smp_longchange_none),
+                          cbind(Study = "Student Microbiome Project (Gut)", Rarefy = "P100", smp_longchange_p100), 
+                          cbind(Study = "Student Microbiome Project (Gut)", Rarefy = "P80", smp_longchange_p80), 
+                          cbind(Study = "Student Microbiome Project (Gut)", Rarefy = "P60", smp_longchange_p60), 
+                          cbind(Study = "Gajer (Vaginal)", Rarefy = "None", gaj_longchange_none), 
+                          cbind(Study = "Gajer (Vaginal)", Rarefy = "P100", gaj_longchange_p100), 
+                          cbind(Study = "Gajer (Vaginal)", Rarefy = "P80", gaj_longchange_p80), 
+                          cbind(Study = "Gajer (Vaginal)", Rarefy = "P60", gaj_longchange_p60), 
+                          cbind(Study = "Ravel (Vaginal)", Rarefy = "None", rav_longchange_none), 
+                          cbind(Study = "Ravel (Vaginal)", Rarefy = "P100", rav_longchange_p100), 
+                          cbind(Study = "Ravel (Vaginal)", Rarefy = "P80", rav_longchange_p80), 
+                          cbind(Study = "Ravel (Vaginal)", Rarefy = "P60", rav_longchange_p60))  %>% 
+  filter(!is.na(NZLogFC))
 
-
+vol_long_rarefy %>% 
+  mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
+                                          "Student Microbiome Project (Gut)", 
+                                          "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
+  mutate(Rarefy = factor(Rarefy, levels = c("None", "P100", "P80", "P60"))) %>% 
+  group_by(Study, Rarefy) %>%
+  summarize(sdLogFC = sd(NZLogFC), 
+            NinGrp = n()) %>% 
+  View() 
+  
+  
+  
