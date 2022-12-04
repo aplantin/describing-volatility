@@ -88,7 +88,6 @@ vol_wide %>%
 
 # Average log fold changes: all lags vs. taxon abundance 
 vol_all %>% 
-  filter(Study != "Ravel (Vaginal)") %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
@@ -111,27 +110,55 @@ vol_all %>%
 
 # Table of SD of log fold changes 
 ## 201,026 nonzero pairs out of all 2,616,040 pairs of changes across the studies/time lags/etc. 
-longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", TimeLag = "1 day", mp_longchange_1),
-                     cbind(Study = "Moving Pictures (Gut)", TimeLag = "3 days", mp_longchange_3), 
-                     cbind(Study = "Moving Pictures (Gut)", TimeLag = "7 days", mp_longchange_7), 
-                     cbind(Study = "Moving Pictures (Gut)", TimeLag = "28 days", mp_longchange_28), 
-                     cbind(Study = "Student Microbiome Project (Gut)", TimeLag = "7 days", smp_longchange_7),  
-                     cbind(Study = "Student Microbiome Project (Gut)", TimeLag = "28 days", smp_longchange_28),
-                     cbind(Study = "Gajer (Vaginal)", TimeLag = "3 days", gaj_longchange_3),  
-                     cbind(Study = "Gajer (Vaginal)", TimeLag = "7 days", gaj_longchange_7),  
-                     cbind(Study = "Gajer (Vaginal)", TimeLag = "28 days", gaj_longchange_28),  
-                     cbind(Study = "Ravel (Vaginal)", TimeLag = "1 day", rav_longchange_1),  
-                     cbind(Study = "Ravel (Vaginal)", TimeLag = "3 days", rav_longchange_3),  
-                     cbind(Study = "Ravel (Vaginal)", TimeLag = "7 days", rav_longchange_7)) %>% 
+longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", TimeLag = "1 day", mp_longchange[[1]]),
+                     cbind(Study = "Moving Pictures (Gut)", TimeLag = "3 days", mp_longchange[[2]]), 
+                     cbind(Study = "Moving Pictures (Gut)", TimeLag = "7 days", mp_longchange[[3]]), 
+                     cbind(Study = "Moving Pictures (Gut)", TimeLag = "28 days", mp_longchange[[4]]), 
+                     cbind(Study = "Student Microbiome Project (Gut)", TimeLag = "7 days", smp_longchange[[1]]),  
+                     cbind(Study = "Student Microbiome Project (Gut)", TimeLag = "28 days", smp_longchange[[2]]),
+                     cbind(Study = "Gajer (Vaginal)", TimeLag = "3 days", gaj_longchange[[1]]),  
+                     cbind(Study = "Gajer (Vaginal)", TimeLag = "7 days", gaj_longchange[[2]]),  
+                     cbind(Study = "Gajer (Vaginal)", TimeLag = "28 days", gaj_longchange[[3]]),  
+                     cbind(Study = "Ravel (Vaginal)", TimeLag = "1 day", rav_longchange[[1]]),  
+                     cbind(Study = "Ravel (Vaginal)", TimeLag = "3 days", rav_longchange[[2]]),  
+                     cbind(Study = "Ravel (Vaginal)", TimeLag = "7 days", rav_longchange[[3]])) %>% 
   mutate(TimeLag = factor(TimeLag, levels = c("1 day", "3 days", "7 days", "28 days"))) %>% 
   select(Study, TimeLag, taxID, changeID, subjID, NZLogFC, NZPairInd, AvgTaxAbund, PropTaxNZ) %>% 
   filter(NZPairInd == 1) 
 longfc_all %>% 
   mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
                                           "Student Microbiome Project (Gut)", 
-                                          "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
+                                          "Gajer (Vaginal)", 
+                                          "Ravel (Vaginal)"))) %>% 
   group_by(Study, TimeLag) %>% 
   summarize(sdLogFC = sd(NZLogFC), 
-            nPairs = n()) %>% 
-  pivot_wider(names_from=TimeLag, values_from = sdLogFC) %>% 
-  select(Study, `1 day`, `3 days`, `7 days`, `28 days`) 
+            nPairs = n()) 
+
+
+# Table of SD of log fold changes, separated by taxon abundance 
+## 201,026 nonzero pairs out of all 2,616,040 pairs of changes across the studies/time lags/etc. 
+longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", TimeLag = "1 day", mp_longchange[[1]]),
+                    cbind(Study = "Moving Pictures (Gut)", TimeLag = "3 days", mp_longchange[[2]]), 
+                    cbind(Study = "Moving Pictures (Gut)", TimeLag = "7 days", mp_longchange[[3]]), 
+                    cbind(Study = "Moving Pictures (Gut)", TimeLag = "28 days", mp_longchange[[4]]), 
+                    cbind(Study = "Student Microbiome Project (Gut)", TimeLag = "7 days", smp_longchange[[1]]),  
+                    cbind(Study = "Student Microbiome Project (Gut)", TimeLag = "28 days", smp_longchange[[2]]),
+                    cbind(Study = "Gajer (Vaginal)", TimeLag = "3 days", gaj_longchange[[1]]),  
+                    cbind(Study = "Gajer (Vaginal)", TimeLag = "7 days", gaj_longchange[[2]]),  
+                    cbind(Study = "Gajer (Vaginal)", TimeLag = "28 days", gaj_longchange[[3]]),  
+                    cbind(Study = "Ravel (Vaginal)", TimeLag = "1 day", rav_longchange[[1]]),  
+                    cbind(Study = "Ravel (Vaginal)", TimeLag = "3 days", rav_longchange[[2]]),  
+                    cbind(Study = "Ravel (Vaginal)", TimeLag = "7 days", rav_longchange[[3]])) %>% 
+  mutate(TimeLag = factor(TimeLag, levels = c("1 day", "3 days", "7 days", "28 days"))) %>% 
+  select(Study, TimeLag, taxID, changeID, subjID, NZLogFC, NZPairInd, AvgTaxAbund, PropTaxNZ) %>% 
+  filter(NZPairInd == 1) %>% 
+  mutate(TaxAbundCat = cut(AvgTaxAbund, c(0, 1e-5, 1e-4, 1e-3, 1), include.lowest=T))
+longfc_all %>% 
+  mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
+                                          "Student Microbiome Project (Gut)", 
+                                          "Gajer (Vaginal)", 
+                                          "Ravel (Vaginal)"))) %>% 
+  group_by(Study, TimeLag, TaxAbundCat) %>% 
+  summarize(sdLogFC = sd(NZLogFC), 
+            nPairs = n()) 
+
