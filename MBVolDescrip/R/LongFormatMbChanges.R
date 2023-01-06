@@ -67,8 +67,7 @@ longMicrobiomeChanges <- function(mbchanges) {
   taxchars$taxID <- rownames(taxchars) 
   
   # Prepare final result 
-  out <- mbchanges$ChangeMeta %>% 
-    select(changeID, subjID, time1, time2, sampID1, sampID2) %>% 
+  out <- mbchanges$ChangeMeta[, c("changeID", "subjID", "time1", "time2", "sampID1", "sampID2")] %>% 
     merge(., addchange_long, by=c("changeID"), all=T) %>% 
     merge(., logfc_long, by=c("changeID", "taxID"), all=T) %>% 
     merge(., qualchange_long, by=c("changeID", "taxID"), all=T) %>% 
