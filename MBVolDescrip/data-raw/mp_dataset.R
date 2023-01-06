@@ -1,11 +1,12 @@
 ## code to prepare Moving Pictures dataset 
 library(tidyverse) 
 library(MicrobeDS)
+library(phyloseq)
 data("MovingPictures")
 
 # load all components of Moving Pictures dataset 
 mp_meta_orig <- data.frame(sample_data(MovingPictures))
-mp_otu_orig <- data.frame(otu_table(MovingPictures))
+mp_gen_orig <- data.frame(otu_table(tax_glom(MovingPictures, taxrank="Genus")))
 mp_tax <- data.frame(tax_table(MovingPictures))
 mp_tree <- phy_tree(MovingPictures)
 

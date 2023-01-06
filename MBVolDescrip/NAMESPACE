@@ -2,6 +2,7 @@
 
 export(calcMicrobiomeChanges)
 export(longMicrobiomeChanges)
+export(rrarefy_variety)
 export(summMicrobiomeVolatility)
 export(temporalSubsampleMeta)
 import(tibble)

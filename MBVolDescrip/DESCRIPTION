@@ -9,10 +9,8 @@ Description: This package provides functions to subsample time points and/or rea
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Depends: 
     R (>= 4.2.0)
 LazyData: true
 Imports: tidyverse, tidyr, tibble, dplyr
-
-
