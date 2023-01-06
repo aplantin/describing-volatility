@@ -30,6 +30,7 @@ List containing the following elements:
 \item{ChangeMeta}{New metadata for changes, with unique subject + time pair identifier and (if applicable) columns for distances }
 \item{AddChangeMat}{Matrix with additive changes. Taxa are columns. Rows are labeled with new identifier.}
 \item{MultChangeMat}{Matrix with multiplicative changes. Taxa are columns. Rows are labeled with new identifier.}
+\item{CLRChangeMat}{Matrix with CLR-based changes. Taxa are columns. Rows are labeled with new identifier.}
 \item{QualChangeMat}{Matrix with qualitative changes. Taxa are columns. Rows are labeled with new identifier.}
 \item{TaxCharacteristics}{Data frame with taxon IDs, average relative abundance, percentile of average relative abundance, and proportion of non-zero values across all samples. }
 }
@@ -37,8 +38,9 @@ List containing the following elements:
 This function calculates several measures of change in the microbiome between
 two consecutive time points based on relative abundance data, including:
 \itemize{
-\item Additive: t2-t1 (difference in taxon proportions. This is defined even when one or both proportions are zero.
+\item Additive: t2-t1 (difference in taxon proportion)s. This is defined even when one or both proportions are zero.
 \item Multiplicative: t2/t1 (ratio of taxon proportions). This will be NA for observations for which t1 = 0 and/or t2 = 0.
+\item CLR-based: CLR(t2) - CLR(t1) (difference in CLR-transformed abundances). A pseudocount of 1 is added to all matrix entries prior to CLR transformation.
 \item Qualitative: I(t2 > 0) - I(t1 > 0). This will be +1 if the taxon appeared (t2 > 0, t1 = 0); -1 if the taxon disappeared (t2 = 0, t1 > 0); and 0 otherwise.
 It also returns a distances between consecutive time points if a distance matrix is provided by the user.
 Finally, it calculates a few useful characteristics of the taxa themselves (average abundance across all samples, proportion of non-zero values).

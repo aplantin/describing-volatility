@@ -2,8 +2,9 @@
 #' 
 #' This function calculates several measures of change in the microbiome between 
 #' two consecutive time points based on relative abundance data, including: 
-#' - Additive: t2-t1 (difference in taxon proportions. This is defined even when one or both proportions are zero. 
+#' - Additive: t2-t1 (difference in taxon proportion)s. This is defined even when one or both proportions are zero. 
 #' - Multiplicative: t2/t1 (ratio of taxon proportions). This will be NA for observations for which t1 = 0 and/or t2 = 0. 
+#' - CLR-based: CLR(t2) - CLR(t1) (difference in CLR-transformed abundances). A pseudocount of 1 is added to all matrix entries prior to CLR transformation. 
 #' - Qualitative: I(t2 > 0) - I(t1 > 0). This will be +1 if the taxon appeared (t2 > 0, t1 = 0); -1 if the taxon disappeared (t2 = 0, t1 > 0); and 0 otherwise. 
 #' It also returns a distances between consecutive time points if a distance matrix is provided by the user. 
 #' Finally, it calculates a few useful characteristics of the taxa themselves (average abundance across all samples, proportion of non-zero values). 
@@ -31,6 +32,7 @@
 #' \item{ChangeMeta}{New metadata for changes, with unique subject + time pair identifier and (if applicable) columns for distances }
 #' \item{AddChangeMat}{Matrix with additive changes. Taxa are columns. Rows are labeled with new identifier.}
 #' \item{MultChangeMat}{Matrix with multiplicative changes. Taxa are columns. Rows are labeled with new identifier.}
+#' \item{CLRChangeMat}{Matrix with CLR-based changes. Taxa are columns. Rows are labeled with new identifier.}
 #' \item{QualChangeMat}{Matrix with qualitative changes. Taxa are columns. Rows are labeled with new identifier.}
 #' \item{TaxCharacteristics}{Data frame with taxon IDs, average relative abundance, percentile of average relative abundance, and proportion of non-zero values across all samples. }
 #' @export
@@ -55,6 +57,10 @@ calcMicrobiomeChanges <- function(otus, changemeta, Ds = NULL, taxaAreRows) {
   }
   otuprops <- otus2/rowSums(otus2)
   
+  # generate CLR-transformed version of OTU matrix 
+  otus.pseudo <- otus2 + 1 
+  clrotus <- t(apply(otus.pseudo, 1, FUN = function(x) log(x/exp(mean(log(x))))))
+  
   # check metadata 
   if (!is.data.frame(changemeta)) {
     stop("This function expects metadata to be a data frame object")
@@ -77,14 +83,19 @@ calcMicrobiomeChanges <- function(otus, changemeta, Ds = NULL, taxaAreRows) {
   time1mat <- otuprops[changemeta$sampID1, ]
   time2mat <- otuprops[changemeta$sampID2, ]
   rownames(time1mat) = rownames(time2mat) = changemeta$changeID
-  
-  # remove taxa absent at both time points 
-  abstime1 <- which(apply(time1mat, 2, FUN = function(x) sum(x != 0)) == 0)
-  abstime2 <- which(apply(time2mat, 2, FUN = function(x) sum(x != 0)) == 0)
-  abstax <- intersect(abstime1, abstime2) 
-  time1mat <- time1mat[, -abstax]
-  time2mat <- time2mat[, -abstax]
-  
+
+  # # remove taxa absent at both time points 
+  # abstime1 <- which(apply(time1mat, 2, FUN = function(x) sum(x != 0)) == 0)
+  # abstime2 <- which(apply(time2mat, 2, FUN = function(x) sum(x != 0)) == 0)
+  # abstax <- intersect(abstime1, abstime2) 
+  # time1mat <- time1mat[, -abstax]
+  # time2mat <- time2mat[, -abstax]
+
+  # Generate time 1 and time 2 CLR-transformed versions 
+  time1clr <- clrotus[changemeta$sampID1, ] 
+  time2clr <- clrotus[changemeta$sampID2, ] 
+  rownames(time1clr) = rownames(time2clr) = changemeta$changeID
+
   # Matrix-based measures of change: ADDITIVE 
   AddChangeMat <- time2mat - time1mat 
   
@@ -93,6 +104,9 @@ calcMicrobiomeChanges <- function(otus, changemeta, Ds = NULL, taxaAreRows) {
   MultChangeMat[time2mat > 0 & time1mat > 0] <- time2mat[time2mat > 0 & time1mat > 0] / time1mat[time2mat > 0 & time1mat > 0] 
   rownames(MultChangeMat) <- rownames(AddChangeMat)
   colnames(MultChangeMat) <- colnames(AddChangeMat)
+  
+  # Matrix-based measures of change: CLR 
+  CLRChangeMat <- time2clr - time1clr 
   
   # Matrix-based measures of change: QUALITATIVE ONLY 
   QualChangeMat <- (time2mat > 0) - (time1mat > 0)
@@ -132,7 +146,7 @@ calcMicrobiomeChanges <- function(otus, changemeta, Ds = NULL, taxaAreRows) {
   }
   
   # Taxon characteristics 
-  bothtimes_otus <- otuprops[union(changemeta$sampID1,changemeta$sampID2), -abstax]
+  bothtimes_otus <- otuprops[union(changemeta$sampID1,changemeta$sampID2), ] # -abstax]
   TaxCharacteristics <- data.frame(
     avgAbund = apply(bothtimes_otus, 2, FUN = function(x) mean(x)), 
     propNZ = apply(bothtimes_otus, 2, FUN = function(x) mean(x != 0))
@@ -140,8 +154,8 @@ calcMicrobiomeChanges <- function(otus, changemeta, Ds = NULL, taxaAreRows) {
   
   # Return 
   return(list(ChangeMeta = changemeta, AddChangeMat = AddChangeMat, 
-              MultChangeMat = MultChangeMat, QualChangeMat = QualChangeMat, 
-              TaxCharacteristics = TaxCharacteristics))
+              MultChangeMat = MultChangeMat, CLRChangeMat = CLRChangeMat, 
+              QualChangeMat = QualChangeMat, TaxCharacteristics = TaxCharacteristics))
   
 }
 
