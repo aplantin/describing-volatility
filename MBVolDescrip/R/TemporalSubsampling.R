@@ -19,7 +19,7 @@
 #' desired spacing. For example, if a 6-8 day range is acceptable for nominally 
 #' weekly sampling, use window_width = 1. 
 #' @param taxaAreRows Indicates whether taxa are rows (versus columns). Default FALSE. 
-#' @return New metadata file with columns subject ID, time point 1, time point 2, sample ID 1, and sample ID 2 
+#' @return New metadata file with columns subject ID, time point 1, time point 2, sample ID 1, sample ID 2, and input parameters time lag and window width  
 #' @export
 #' 
 #' @importFrom dplyr filter arrange
@@ -146,6 +146,9 @@ temporalSubsampleMeta <- function(otus, metadata, desired_spacing, window_width,
     newmeta$sampID2[i] <- metadata$sampID[metadata$subjID == newmeta$subjID[i] & 
                                             metadata$time == newmeta$time2[i]]
   }
+  
+  newmeta$NominalLag = desired_spacing
+  newmeta$WindowWidth = window_width
   
   return(newmeta)
   

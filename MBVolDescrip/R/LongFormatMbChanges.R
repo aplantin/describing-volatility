@@ -28,7 +28,7 @@
 #' 
 longMicrobiomeChanges <- function(mbchanges) {
   
-  # Elements of mbchanges: ChangeMeta, AddChangeMat, MultChangeMat, QualChangeMat, TaxCharacteristics
+  # Elements of mbchanges: ChangeMeta, AddChangeMat, MultChangeMat, CLRChangeMat, QualChangeMat, TaxCharacteristics
   
   # Useful reference 
   otu_ids <- colnames(mbchanges$AddChangeMat) 
@@ -41,7 +41,7 @@ longMicrobiomeChanges <- function(mbchanges) {
     pivot_longer(cols = all_of(otu_ids), 
                  names_to = "taxID", values_to = "AdditiveChg")
 
-  # Additive changes: wide to long 
+  # Multiplicative changes: wide to long 
   logfc_wide <- mbchanges$MultChangeMat %>% 
     as_tibble() 
   logfc_wide$changeID = rownames(mbchanges$MultChangeMat)
@@ -50,6 +50,14 @@ longMicrobiomeChanges <- function(mbchanges) {
                  names_to = "taxID", values_to = "MultNZChg") %>% 
     mutate(NZLogFC = log(MultNZChg), 
            NZPairInd = as.numeric(!is.na(MultNZChg))) 
+  
+  # CLR changes: wide to long 
+  clr_wide <- mbchanges$CLRChangeMat %>% 
+    as_tibble() 
+  clr_wide$changeID = rownames(mbchanges$CLRChangeMat)
+  clr_long <- clr_wide %>% 
+    pivot_longer(cols = all_of(otu_ids), 
+                 names_to = "taxID", values_to = "CLRChg") 
   
   # Qualitative changes: wide to long 
   qualchange_wide <- mbchanges$QualChangeMat %>% 
@@ -70,6 +78,7 @@ longMicrobiomeChanges <- function(mbchanges) {
   out <- mbchanges$ChangeMeta[, c("changeID", "subjID", "time1", "time2", "sampID1", "sampID2")] %>% 
     merge(., addchange_long, by=c("changeID"), all=T) %>% 
     merge(., logfc_long, by=c("changeID", "taxID"), all=T) %>% 
+    merge(., clr_long, by=c("changeID", "taxID"), all=T) %>% 
     merge(., qualchange_long, by=c("changeID", "taxID"), all=T) %>% 
     merge(., taxchars, by=c("taxID"), all=T)
   

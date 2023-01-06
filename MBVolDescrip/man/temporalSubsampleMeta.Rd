@@ -31,7 +31,7 @@ weekly sampling, use window_width = 1.}
 \item{taxaAreRows}{Indicates whether taxa are rows (versus columns). Default FALSE.}
 }
 \value{
-New metadata file with columns subject ID, time point 1, time point 2, sample ID 1, and sample ID 2
+New metadata file with columns subject ID, time point 1, time point 2, sample ID 1, sample ID 2, and input parameters time lag and window width
 }
 \description{
 This function cross-checks metadata samples with OTU samples, then identifies
