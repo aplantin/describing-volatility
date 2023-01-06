@@ -18,6 +18,8 @@ Data frame containing the following columns:
 \item{time2}{Later time point in change calculations}
 \item{sampID1}{Sample ID for earlier time point}
 \item{sampID2}{Sample ID for later time point}
+\item{NominalLag}{Nominal time lag between samples}
+\item{WindowWidth}{Allowable difference between actual and nominal time lag}
 \item{AdditiveChg}{(t2-t1) relative abundance}
 \item{MultNZChg}{(t2/t1) relative abundance, if both are greater than 0}
 \item{NZLogFC}{log(t2/t1) relative abundance, if both are greater than 0}
