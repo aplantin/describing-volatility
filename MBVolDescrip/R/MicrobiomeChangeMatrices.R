@@ -48,16 +48,23 @@ calcMicrobiomeChanges <- function(otus, changemeta, Ds = NULL, taxaAreRows) {
     stop("Please ensure OTU matrix row names are sample IDs")
   }
   
-  # standardize OTU format so taxa are columns 
-  # and convert to proportions 
+  # standardize OTU format so taxa are columns
   if (taxaAreRows) {
     otus2 <- t(otus) 
   } else {
     otus2 <- otus 
   }
+  
+  # Remove absent taxa (across all samples)
+  if (any(apply(otus2, 1, FUN = function(x) sum(x != 0)) == 0)) {
+    abstax <- which(apply(otus2, 1, FUN = function(x) sum(x != 0)) == 0)
+    otus2 <- otus2[, -abstax]
+  }
+  
+  # Convert to proportions
   otuprops <- otus2/rowSums(otus2)
   
-  # generate CLR-transformed version of OTU matrix 
+  # Generate CLR-transformed version of OTU matrix 
   otus.pseudo <- otus2 + 1 
   clrotus <- t(apply(otus.pseudo, 1, FUN = function(x) log(x/exp(mean(log(x))))))
   
