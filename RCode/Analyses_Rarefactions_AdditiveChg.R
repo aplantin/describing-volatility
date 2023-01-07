@@ -1,9 +1,9 @@
-### This document .....  ###
+### This document makes summaries and plots for additive changes after  ###
+### different rarefaction approaches                                     ### 
 
 library(tidyverse)
 library(gridExtra)
 library(MBVolDescrip)
-
 
 ## Read in rarefications volatility data
 vol_all_rarefy <- readRDS(file="VolSumms/vol_all_rarefy.rds") 

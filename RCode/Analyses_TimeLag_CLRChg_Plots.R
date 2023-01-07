@@ -1,6 +1,6 @@
-### This document extracts average multiplicative change between time points  ###
-### (for which the taxon was present at both times, necessarily) and compares ### 
-### these averages by taxon abundance, time lag, and study                    ###
+### This document extracts average differences in CLR-transformed abundance   ### 
+### between time points (present or absent) and compares these averages by   ### 
+### taxon abundance, time lag, and study                                     ###
 
 library(tidyverse)
 library(gridExtra)
@@ -23,7 +23,7 @@ longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
                     cbind(Study = "Ravel (Vaginal)", rav_longchange))%>% 
   mutate(TimeLag = factor(paste0(NominalLag, " day"), 
                           levels = c("1 day", "3 day", "7 day", "28 day"))) %>% 
-  select(Study, TimeLag, taxID, changeID, subjID, NZLogFC, AvgTaxAbund) 
+  select(Study, TimeLag, taxID, changeID, subjID, CLRChg, AvgTaxAbund) 
 
 
 
@@ -35,9 +35,9 @@ longfc_all %>%
                                           "Ravel (Vaginal)"))) %>% 
   mutate(TaxAbundCat = cut(AvgTaxAbund, c(0, 1e-5, 1e-4, 1e-3, 1), include.lowest=T)) %>% 
   group_by(Study, TimeLag, TaxAbundCat) %>% 
-  summarize(sdLogFC = sd(NZLogFC, na.rm=T), 
-            nPairs = sum(!is.na(NZLogFC))) %>% 
-  ggplot(aes(x=TaxAbundCat, y=sdLogFC, fill=TimeLag)) + 
+  summarize(sdCLR = sd(CLRChg), 
+            nPairs = n()) %>% 
+  ggplot(aes(x=TaxAbundCat, y=sdCLR, fill=TimeLag)) + 
   geom_bar(stat="identity", position="dodge") + 
   facet_wrap(vars(Study), nrow=1) + 
   scale_x_discrete(guide = guide_axis(n.dodge=2)) + 
@@ -46,14 +46,36 @@ longfc_all %>%
   #geom_text(aes(label=nPairs, group=TimeLag), vjust=0.5, hjust=0, size=3, 
   #          position=position_dodge(width=0.9), angle=90) + 
   xlab("Taxon Abundance Category") + 
-  ylab("Standard Deviation of Log Fold Change")
+  ylab("Standard Deviation of CLR-Based Changes")
+
+
+# Box plot of SD of additive changes, separated by taxon abundance 
+library(ggallin)
+longfc_all %>% 
+  mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
+                                          "Student Microbiome Project (Gut)", 
+                                          "Gajer (Vaginal)", 
+                                          "Ravel (Vaginal)"))) %>% 
+  mutate(TaxAbundCat = cut(AvgTaxAbund, c(0, 1e-5, 1e-4, 1e-3, 1), include.lowest=T)) %>% 
+  ggplot(aes(x=TaxAbundCat, y=CLRChg, fill=TimeLag)) + 
+  geom_boxplot() + 
+  facet_wrap(vars(Study), nrow=1) + 
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) + 
+  scale_y_continuous(trans=pseudolog10_trans) + 
+  scale_fill_grey() + 
+  theme_bw() + 
+  #geom_text(aes(label=nPairs, group=TimeLag), vjust=0.5, hjust=0, size=3, 
+  #          position=position_dodge(width=0.9), angle=90) + 
+  xlab("Taxon Abundance Category") + 
+  ylab("CLR-Based Changes")
+
 
 
 # Scatterplot with loess showing changes are centered around 0 
 longfc_avgs <- longfc_all %>% 
-  select(Study, TimeLag, taxID, NZLogFC, AvgTaxAbund) %>% 
+  select(Study, TimeLag, taxID, CLRChg, AvgTaxAbund) %>% 
   group_by(Study, TimeLag, taxID, AvgTaxAbund) %>% 
-  summarize(meanChg = mean(NZLogFC, na.rm=T))
+  summarize(meanChg = mean(CLRChg))
 longfc_avgs %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
@@ -71,7 +93,7 @@ longfc_avgs %>%
   theme_bw()  + 
   theme(text=element_text(size=14), 
         legend.position = "right") + 
-  ggtitle("Log Fold Changes by Time Lag and Taxon Abundance")
+  ggtitle("CLR-Based Changes by Time Lag and Taxon Abundance")
 
 
 
@@ -82,25 +104,25 @@ sd.all <- longfc_all %>%
                                           "Gajer (Vaginal)", 
                                           "Ravel (Vaginal)"))) %>% 
   group_by(Study, TimeLag) %>% 
-  summarize(sdLogFC = sd(NZLogFC, na.rm=T), 
-            nPairs = sum(!is.na(NZLogFC))) %>% 
+  summarize(sdCLR = sd(CLRChg), 
+            nPairs = n()) %>% 
   mutate(TaxAbundCat = "All") %>% 
-  select(Study, TimeLag, TaxAbundCat, sdLogFC, nPairs)
+  select(Study, TimeLag, TaxAbundCat, sdCLR, nPairs)
 sd.abund <- longfc_all %>% 
   mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
                                           "Student Microbiome Project (Gut)", 
                                           "Gajer (Vaginal)", 
-                                          "Ravel (Vaginal)")))%>% 
+                                          "Ravel (Vaginal)"))) %>% 
   mutate(TaxAbundCat = cut(AvgTaxAbund, c(0, 1e-5, 1e-4, 1e-3, 1), include.lowest=T)) %>% 
   group_by(Study, TimeLag, TaxAbundCat) %>% 
-  summarize(sdLogFC = sd(NZLogFC, na.rm=T), 
-            nPairs = sum(!is.na(NZLogFC))) 
+  summarize(sdCLR = sd(CLRChg), 
+            nPairs = n()) 
 
-sd.logfc <- rbind(sd.all, sd.abund) %>% 
+sd.clr <- rbind(sd.all, sd.abund) %>% 
   mutate(TaxAbundCat = factor(TaxAbundCat, levels = c("All", "[0,1e-05]", "(1e-05,0.0001]", 
                                                       "(0.0001,0.001]", "(0.001,1]")), 
-         SD.n = paste0(round(sdLogFC, 2), " (", nPairs, ")")) %>% 
+         SD.n = paste0(round(sdCLR, 2), " (", nPairs, ")")) %>% 
   select(Study, TimeLag, TaxAbundCat, SD.n) %>% 
   pivot_wider(names_from=TimeLag, values_from=SD.n) %>% 
   arrange(Study, TaxAbundCat)
-write.csv(sd.logfc, file=paste0(pre, "Tables/sd_logfc.csv"), row.names=F)
+write.csv(sd.clr, file=paste0(pre, "Tables/sd_clr.csv"), row.names=F)
