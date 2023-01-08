@@ -28,13 +28,13 @@ gaj_meta <- gv_meta_raw %>%
 
 # Load proportions (from article) and check match of sample IDs 
 gv_otus_props <- read.csv(filepath.otus, row.names = 1)
-gv_otus_props <- gv_otus_props[gaj_meta$sampID, ]
+gv_otus_props <- gv_otus_props[gaj_meta$sampID, ]/100
 all(rownames(gv_otus_props) == gaj_meta$sampID) 
 
 # Convert to counts -- rounded to whole numbers 
 gaj_otu <- gv_otus_props 
 for (i in 1:nrow(gaj_otu)) {
-  gaj_otu[i, ] <- round(gv_otus_props[i, ] * gaj_meta$ReadCount/100)
+  gaj_otu[i, ] <- round(gv_otus_props[i, ] * gaj_meta$ReadCount[i])
 }
 
 # Summary stats: number of samples per subject
