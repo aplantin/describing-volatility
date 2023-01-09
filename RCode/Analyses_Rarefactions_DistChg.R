@@ -12,9 +12,10 @@ distvol_rarefy_mp <- readRDS("VolSumms/distvol_rarefy_mp.rds")
 
 
 # Average dissimilarity by study, for different time lags 
+distvol_rarefy$Study[distvol_rarefy$Study == "Student Microbiome Project (Gut)"] <- "SMP (Gut)"
 p1 <- distvol_rarefy %>% 
   mutate(Study = factor(Study, 
-                        levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
+                        levels = c("Moving Pictures (Gut)", "SMP (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
   mutate(Rarefaction = case_when(Rarefy == "None" ~ "Original", 
                                  Rarefy == "P100" ~ "100%", 
@@ -27,7 +28,7 @@ p1 <- distvol_rarefy %>%
   ggtitle("Intra-Subject Bray-Curtis Dissimilarity By Rarefaction")  + 
   theme_bw() + 
   facet_wrap(vars(Study), nrow=1) + 
-  theme(text=element_text(size=24)) + 
+  theme(text=element_text(size=32)) + 
   xlab("Rarefaction") + ylab("Bray-Curtis Dissimilarity") 
 
 png(filename = paste0(pre, "Figures/rarefy_braycurtis.png"),
@@ -41,9 +42,9 @@ p2 <- distvol_rarefy_mp %>%
   pivot_longer(unweightedUF:BrayCurtis, names_to="Dissimilarity", values_to="Value") %>% 
   mutate(Distance = case_when(Dissimilarity == "unweightedUF" ~ "Unweighted UniFrac", 
                               Dissimilarity == "weightedUF" ~ "Weighted UniFrac", 
-                              Dissimilarity == "genUF0.5" ~ "Generalized UniFrac (alpha=0.5)", 
+                              Dissimilarity == "genUF0.5" ~ "Gen. UniFrac (alpha=0.5)", 
                               Dissimilarity == "BrayCurtis" ~ "Bray-Curtis")) %>% 
-  mutate(Distance = factor(Distance, levels = c("Unweighted UniFrac", "Generalized UniFrac (alpha=0.5)", 
+  mutate(Distance = factor(Distance, levels = c("Unweighted UniFrac", "Gen. UniFrac (alpha=0.5)", 
                                                 "Weighted UniFrac", "Bray-Curtis"))) %>% 
   mutate(Rarefaction = case_when(Rarefy == "None" ~ "Original", 
                                  Rarefy == "P100" ~ "100%", 
@@ -56,7 +57,7 @@ p2 <- distvol_rarefy_mp %>%
   ggtitle("Moving Pictures Intra-Subject Dissimilarity By Distance Metric and Rarefaction")  + 
   theme_bw() + 
   facet_wrap(vars(Distance), nrow=1) + 
-  theme(text=element_text(size=24)) + 
+  theme(text=element_text(size=32)) + 
   xlab("Rarefaction") + ylab("Dissimilarity") 
 
 png(filename = paste0(pre, "Figures/rarefy_distmetric_mp.png"),

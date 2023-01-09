@@ -18,9 +18,10 @@ longchg_all <- readRDS(paste0(pre, "VolSumms/vol_long_day7_allstudy_allrarefy.rd
                                      ChangeMeasure == "sdCLR" ~ "CLR-Based"))
   
   
+longchg_all$Study[longchg_all$Study == "Student Microbiome Project (Gut)"] <- "SMP (Gut)"
 p <- longchg_all %>% 
     mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
-                                            "Student Microbiome Project (Gut)", 
+                                            "SMP (Gut)", 
                                             "Gajer (Vaginal)", 
                                             "Ravel (Vaginal)")), 
            MeasureOfChange = factor(MeasureOfChange, levels = c("Additive", 
@@ -33,7 +34,7 @@ p <- longchg_all %>%
   scale_x_discrete(guide = guide_axis(n.dodge=2)) + 
   scale_fill_grey() + 
   theme_bw() + 
-  theme(text=element_text(size=24)) + 
+  theme(text=element_text(size=36)) + 
   #geom_text(aes(label=nPairs, group=TimeLag), vjust=0.5, hjust=0, size=3, 
   #          position=position_dodge(width=0.9), angle=90) + 
   xlab("Taxon Abundance Category") + 
@@ -42,7 +43,7 @@ p <- longchg_all %>%
 
 
 
-png(filename = paste0(pre, "Figures/combined_barplot_rarefy.png"), width = 1600, height = 1200)
+png(filename = paste0(pre, "Figures/combined_barplot_rarefy.png"), width = 2000, height = 1200)
 p 
 dev.off() 
 

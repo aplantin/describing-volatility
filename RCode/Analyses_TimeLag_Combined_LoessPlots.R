@@ -14,7 +14,7 @@ rav_longchange <- readRDS(paste0(pre, "VolSumms/rav_longchg_rarefyP100.rds")) %>
   do.call(rbind, .)
 
 longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
-                    cbind(Study = "Student Microbiome Project (Gut)", smp_longchange),  
+                    cbind(Study = "SMP (Gut)", smp_longchange),  
                     cbind(Study = "Gajer (Vaginal)", gaj_longchange),  
                     cbind(Study = "Ravel (Vaginal)", rav_longchange))%>% 
   mutate(TimeLag = factor(paste0(NominalLag, " day"), 
@@ -36,25 +36,25 @@ longfc_avgs <- longfc_all %>%
 
 p <- longfc_avgs %>% 
   mutate(Study = factor(Study, 
-                        levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
+                        levels = c("Moving Pictures (Gut)", "SMP (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
   ggplot() + 
   xlab("Log Average Relative Abundance") + 
   ylab("Change in Abundance") + 
   geom_point(aes(x=log(AvgTaxAbund), y=ChangeMean,
-                 group=TimeLag, color=TimeLag), size=0.1, alpha=0.15) + 
+                 group=TimeLag, color=TimeLag), size=0.2, alpha=0.15) + 
   geom_smooth(aes(x=log(AvgTaxAbund), y=ChangeMean,
                   group=TimeLag, color=TimeLag),  
               method = "loess", se=T) + 
   geom_abline(slope=0, intercept=0, color="black", lty=2) + 
   facet_grid(rows=vars(MeasureOfChange), cols=vars(Study), scales="free") + 
   theme_bw()  + 
-  theme(text=element_text(size=24), 
+  theme(text=element_text(size=32), 
         legend.position = "bottom")
 
 
 
-png(filename = paste0(pre, "Figures/combined_loess_timelag.png"), width = 1600, height = 1200)
+png(filename = paste0(pre, "Figures/combined_loess_timelag.png"), width = 1400, height = 1600)
 p 
 dev.off() 
 

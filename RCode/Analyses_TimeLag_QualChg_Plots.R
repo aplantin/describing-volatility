@@ -17,7 +17,7 @@ rav_longchange <- readRDS(paste0(pre, "VolSumms/rav_longchg_rarefyP100.rds")) %>
   do.call(rbind, .)
 
 longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
-                    cbind(Study = "Student Microbiome Project (Gut)", smp_longchange),  
+                    cbind(Study = "SMP (Gut)", smp_longchange),  
                     cbind(Study = "Gajer (Vaginal)", gaj_longchange),  
                     cbind(Study = "Ravel (Vaginal)", rav_longchange))%>% 
   mutate(TimeLag = factor(paste0(NominalLag, " day"), 
@@ -34,7 +34,7 @@ qualvol <- longfc_all %>%
 # Average qualitative changes: all lags vs. taxon abundance 
 p <- qualvol %>% 
   mutate(Study = factor(Study, 
-                        levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
+                        levels = c("Moving Pictures (Gut)", "SMP (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
   ggplot(aes(x=log(AvgTaxAbund), y=PropQualChg, group=TimeLag, color=TimeLag)) + 
   theme_bw() + 
@@ -45,14 +45,14 @@ p <- qualvol %>%
   geom_smooth(method = "loess", se=T) + 
   geom_abline(slope=0, intercept=0, color="black", lty=2) + 
   facet_wrap(vars(Study), nrow=1) + 
-  theme(text=element_text(size=24), 
+  theme(text=element_text(size=32), 
         legend.position = "bottom") + 
   ggtitle("Proportion of Time Points with Presence/Absence Change")
 
 
 
 png(filename = paste0(pre, "Figures/timelag_qualchange_vs_abundance.png"),
-    width = 1600, height = 500)
+    width = 1600, height = 550)
 p 
 dev.off() 
 

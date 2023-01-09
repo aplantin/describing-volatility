@@ -50,6 +50,7 @@ longchange_day7 <- readRDS(paste0(pre, "VolSumms/vol_long_day7_allstudy_allraref
                                            avg_readct_cat == 4 ~ "4 (Highest)"))
   
 
+longchange_day7$Study[longchange_day7$Study == "Student Microbiome Project (Gut)"] <- "SMP (Gut)"
 
 ## SD bar chart (by taxon abundance and original read count quartile)
 p1 <- longchange_day7 %>% 
@@ -66,7 +67,7 @@ p1 <- longchange_day7 %>%
                                      ChangeMeasure == "sdLogFC" ~ "Log Fold Change", 
                                      ChangeMeasure == "sdCLR" ~ "CLR-Based")) %>% 
   mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
-                                          "Student Microbiome Project (Gut)", 
+                                          "SMP (Gut)", 
                                           "Gajer (Vaginal)", 
                                           "Ravel (Vaginal)"))) %>% 
   mutate(MeasureOfChange = factor(MeasureOfChange, 
@@ -77,12 +78,12 @@ p1 <- longchange_day7 %>%
   scale_x_discrete(guide = guide_axis(n.dodge=2)) + 
   scale_fill_grey() + 
   theme_bw() + 
-  theme(text=element_text(size=24)) + 
+  theme(text=element_text(size=36)) + 
   xlab("Taxon Abundance Category") + 
   ylab("Standard Deviation of Change Measure")
 
 
-png(filename = paste0(pre, "Figures/combined_barplot_origreads.png"), width = 1600, height = 1200)
+png(filename = paste0(pre, "Figures/combined_barplot_origreads.png"), width = 2000, height = 1200)
 p1
 dev.off() 
 
@@ -92,7 +93,7 @@ dev.off()
 ## line graph showing proportion of qualitative changes by read count quartile and taxon abundance quantile 
 p2 <- longchange_day7 %>% 
   mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
-                                          "Student Microbiome Project (Gut)", 
+                                          "SMP (Gut)", 
                                           "Gajer (Vaginal)", 
                                           "Ravel (Vaginal)"))) %>%
   group_by(Study, `Read Count Quartile`, taxID, AvgTaxAbund) %>% 
@@ -104,16 +105,16 @@ p2 <- longchange_day7 %>%
                   col=`Read Count Quartile`),  
               method = "loess", se=T) + 
   geom_abline(slope=0, intercept=0, color="black", lty=2) + 
-  facet_wrap(vars(Study), nrow=1, scales = "free_x") + 
+  facet_wrap(vars(Study), nrow=1) + 
   theme_bw() + 
   xlab("Taxon Abundance") + 
   ylab("Proportion Qualitative Changes") + 
   ggtitle("Proportion of Time Points with Presence/Absence Change") + 
   ylim(0,1) + 
-  theme(text=element_text(size=24), legend.position="bottom") 
+  theme(text=element_text(size=32), legend.position="bottom") 
 
 png(filename = paste0(pre, "Figures/origreads_qualchange_vs_abundance.png"),
-    width = 1600, height = 500)
+    width = 1600, height = 550)
 p2
 dev.off() 
 
