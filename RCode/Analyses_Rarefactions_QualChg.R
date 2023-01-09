@@ -21,7 +21,7 @@ qual_longchg <- readRDS(paste0(pre, "VolSumms/vol_long_day7_allstudy_allrarefy.r
 
 
 # Make plot 
-qual_longchg %>% 
+p <- qual_longchg %>% 
   ggplot() + 
   theme_bw() + 
   ylim(0, 0.65) + 
@@ -33,8 +33,13 @@ qual_longchg %>%
                   group=Rarefaction, color=Rarefaction),  
               method = "loess", se=T) + 
   geom_abline(slope=0, intercept=0, color="black", lty=2) + 
-  facet_wrap(vars(Study), nrow=1, scales="free_x") + 
-  theme(text=element_text(size=14), 
+  facet_wrap(vars(Study), nrow=1) + 
+  theme(text=element_text(size=24), 
         legend.position = "bottom") + 
   ggtitle("Proportion of Time Points with Presence/Absence Change")
 
+
+png(filename = paste0(pre, "Figures/rarefy_qualchange_vs_abundance.png"),
+    width = 1600, height = 500)
+p
+dev.off() 

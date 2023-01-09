@@ -34,7 +34,7 @@ longfc_avgs <- longfc_all %>%
                                      ChangeMeasure == "meanLogFC" ~ "Log Fold Change", 
                                      ChangeMeasure == "meanCLRChg" ~ "CLR-Based"))
 
-longfc_avgs %>% 
+p <- longfc_avgs %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
@@ -49,7 +49,14 @@ longfc_avgs %>%
   geom_abline(slope=0, intercept=0, color="black", lty=2) + 
   facet_grid(rows=vars(MeasureOfChange), cols=vars(Study), scales="free") + 
   theme_bw()  + 
-  theme(text=element_text(size=14), 
+  theme(text=element_text(size=24), 
         legend.position = "bottom")
+
+
+
+png(filename = paste0(pre, "Figures/combined_loess_timelag.png"), width = 1600, height = 1200)
+p 
+dev.off() 
+
 
 

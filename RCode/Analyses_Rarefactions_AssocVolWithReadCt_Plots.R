@@ -52,7 +52,7 @@ longchange_day7 <- readRDS(paste0(pre, "VolSumms/vol_long_day7_allstudy_allraref
 
 
 ## SD bar chart (by taxon abundance and original read count quartile)
-longchange_day7 %>% 
+p1 <- longchange_day7 %>% 
   select(Study, taxID, changeID, subjID, AdditiveChg, NZLogFC, CLRChg, 
          AvgTaxAbund, avg_readct, `Read Count Quartile`) %>% 
   mutate(TaxAbundCat = cut(AvgTaxAbund, c(0, 1e-5, 1e-4, 1e-3, 1), 
@@ -77,13 +77,20 @@ longchange_day7 %>%
   scale_x_discrete(guide = guide_axis(n.dodge=2)) + 
   scale_fill_grey() + 
   theme_bw() + 
-  theme(text=element_text(size=12)) + 
+  theme(text=element_text(size=24)) + 
   xlab("Taxon Abundance Category") + 
   ylab("Standard Deviation of Change Measure")
 
 
+png(filename = paste0(pre, "Figures/combined_barplot_origreads.png"), width = 1600, height = 1200)
+p1
+dev.off() 
+
+
+
+
 ## line graph showing proportion of qualitative changes by read count quartile and taxon abundance quantile 
-longchange_day7 %>% 
+p2 <- longchange_day7 %>% 
   mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
                                           "Student Microbiome Project (Gut)", 
                                           "Gajer (Vaginal)", 
@@ -103,8 +110,12 @@ longchange_day7 %>%
   ylab("Proportion Qualitative Changes") + 
   ggtitle("Proportion of Time Points with Presence/Absence Change") + 
   ylim(0,1) + 
-  theme(text=element_text(size=14), legend.position="bottom") 
+  theme(text=element_text(size=24), legend.position="bottom") 
 
+png(filename = paste0(pre, "Figures/origreads_qualchange_vs_abundance.png"),
+    width = 1600, height = 500)
+p2
+dev.off() 
 
 
   

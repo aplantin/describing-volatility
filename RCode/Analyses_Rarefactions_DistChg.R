@@ -12,7 +12,7 @@ distvol_rarefy_mp <- readRDS("VolSumms/distvol_rarefy_mp.rds")
 
 
 # Average dissimilarity by study, for different time lags 
-distvol_rarefy %>% 
+p1 <- distvol_rarefy %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
@@ -27,12 +27,17 @@ distvol_rarefy %>%
   ggtitle("Intra-Subject Bray-Curtis Dissimilarity By Rarefaction")  + 
   theme_bw() + 
   facet_wrap(vars(Study), nrow=1) + 
-  theme(text=element_text(size=14)) + 
+  theme(text=element_text(size=24)) + 
   xlab("Rarefaction") + ylab("Bray-Curtis Dissimilarity") 
+
+png(filename = paste0(pre, "Figures/rarefy_braycurtis.png"),
+    width = 1600, height = 500)
+p1
+dev.off() 
 
 
 # Different dissimilarities & time lags 
-distvol_rarefy_mp %>% 
+p2 <- distvol_rarefy_mp %>% 
   pivot_longer(unweightedUF:BrayCurtis, names_to="Dissimilarity", values_to="Value") %>% 
   mutate(Distance = case_when(Dissimilarity == "unweightedUF" ~ "Unweighted UniFrac", 
                               Dissimilarity == "weightedUF" ~ "Weighted UniFrac", 
@@ -51,6 +56,11 @@ distvol_rarefy_mp %>%
   ggtitle("Moving Pictures Intra-Subject Dissimilarity By Distance Metric and Rarefaction")  + 
   theme_bw() + 
   facet_wrap(vars(Distance), nrow=1) + 
-  theme(text=element_text(size=14)) + 
+  theme(text=element_text(size=24)) + 
   xlab("Rarefaction") + ylab("Dissimilarity") 
+
+png(filename = paste0(pre, "Figures/rarefy_distmetric_mp.png"),
+    width = 1600, height = 500)
+p2
+dev.off() 
 

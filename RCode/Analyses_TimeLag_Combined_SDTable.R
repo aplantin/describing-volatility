@@ -15,7 +15,17 @@ rav_longchange <- readRDS(paste0(pre, "VolSumms/rav_longchg_rarefyP100.rds")) %>
   do.call(rbind, .)
 
 
- %>% 
+
+longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
+                    cbind(Study = "Student Microbiome Project (Gut)", smp_longchange),  
+                    cbind(Study = "Gajer (Vaginal)", gaj_longchange),  
+                    cbind(Study = "Ravel (Vaginal)", rav_longchange))%>% 
+  mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
+                                          "Student Microbiome Project (Gut)", 
+                                          "Gajer (Vaginal)", "Ravel (Vaginal)")), 
+         TimeLag = factor(paste0(NominalLag, " day"), 
+                          levels = c("1 day", "3 day", "7 day", "28 day")), 
+         TaxAbundCat = cut(AvgTaxAbund, c(0, 1e-5, 1e-4, 1e-3, 1), include.lowest=T)) %>% 
   group_by(Study, TimeLag, TaxAbundCat) %>% 
   summarize(sdAddChg = sd(AdditiveChg), 
             nAddChg = sum(!is.na(AdditiveChg)), 
@@ -32,6 +42,7 @@ rav_longchange <- readRDS(paste0(pre, "VolSumms/rav_longchg_rarefyP100.rds")) %>
                                      ChangeMeasure == "LogFC" ~ "Log Fold Change", 
                                      ChangeMeasure == "CLRChg" ~ "CLR-Based")) %>% 
   pivot_wider(names_from=TimeLag, values_from=ChangeSD) 
+
 
 # Long-format changes --> overall SDs 
 longchg_overall <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
@@ -62,7 +73,6 @@ longchg_overall <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
   pivot_wider(names_from=TimeLag, values_from=ChangeSD) 
   
  
-
 # Long-format changes --> taxon abundance specific SDs 
 longchg_abund <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
                          cbind(Study = "Student Microbiome Project (Gut)", smp_longchange),  
@@ -91,7 +101,6 @@ longchg_abund <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
                                      ChangeMeasure == "LogFC" ~ "Log Fold Change", 
                                      ChangeMeasure == "CLRChg" ~ "CLR-Based")) %>% 
   pivot_wider(names_from=TimeLag, values_from=ChangeSD) 
-
 
 
 # Merge and sort 
