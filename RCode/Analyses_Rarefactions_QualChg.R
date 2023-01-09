@@ -4,13 +4,10 @@
 library(tidyverse)
 library(gridExtra)
 library(dplyr)
-library(MBVolDescrip)
 
-## Read in rarefications volatility data
-vol_all_rarefy <- readRDS(file="VolSumms/vol_all_rarefy.rds") 
-
-# Average qualitative changes: all lags vs. taxon abundance 
-vol_all_rarefy %>% 
+## Read in long-format rarefied volatility data
+qual_longchg <- readRDS(paste0(pre, "VolSumms/vol_long_day7_allstudy_allrarefy.rds")) %>% 
+  filter(AvgTaxAbund != 0) %>% 
   mutate(Study = factor(Study, 
                         levels = c("Moving Pictures (Gut)", "Student Microbiome Project (Gut)", 
                                    "Gajer (Vaginal)", "Ravel (Vaginal)"))) %>% 
@@ -19,18 +16,25 @@ vol_all_rarefy %>%
                                  Rarefy == "P80" ~ "80%", 
                                  Rarefy == "P60" ~ "60%")) %>% 
   mutate(Rarefaction = factor(Rarefaction, levels = c("Original", "100%", "80%", "60%"))) %>% 
+  group_by(Study, taxID, AvgTaxAbund, Rarefaction) %>% 
+  summarize(PropQualChange = mean(QualChg != 0)) 
+
+
+# Make plot 
+qual_longchg %>% 
   ggplot() + 
   theme_bw() + 
+  ylim(0, 0.65) + 
   xlab("Log Average Relative Abundance") + 
   ylab("Proportion Qualitative Changes") + 
-  geom_point(aes(x=log(AvgTaxAbund_day7), y=PropQualChange_day7,
+  geom_point(aes(x=log(AvgTaxAbund), y=PropQualChange,
                  group=Rarefaction, color=Rarefaction), size=0.1, alpha=0.15) + 
-  geom_smooth(aes(x=log(AvgTaxAbund_day7), y=PropQualChange_day7,
+  geom_smooth(aes(x=log(AvgTaxAbund), y=PropQualChange,
                   group=Rarefaction, color=Rarefaction),  
               method = "loess", se=T) + 
   geom_abline(slope=0, intercept=0, color="black", lty=2) + 
-  facet_wrap(vars(Study), nrow=1) + 
+  facet_wrap(vars(Study), nrow=1, scales="free_x") + 
   theme(text=element_text(size=14), 
         legend.position = "bottom") + 
-  ggtitle("Frequency of Presence/Absence Change by Rarefaction and Abundance")
+  ggtitle("Proportion of Time Points with Presence/Absence Change")
 

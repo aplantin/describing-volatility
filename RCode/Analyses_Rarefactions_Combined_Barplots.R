@@ -4,25 +4,11 @@ library(gridExtra)
 library(dplyr)
 pre <- "~/AnnaDocuments/Research/Methods_indiv/2022_DescribingVolatility/"
 
-# Long-format additive changes 
-mp_longchange <- readRDS(paste0(pre, "VolSumms/mp_longchg_rarefyP100.rds")) %>% 
-  do.call(rbind, .)
-smp_longchange <- readRDS(paste0(pre, "VolSumms/smp_longchg_rarefyP100.rds")) %>% 
-  do.call(rbind, .) 
-gaj_longchange <- readRDS(paste0(pre, "VolSumms/gaj_longchg_rarefyP100.rds")) %>% 
-  do.call(rbind, .) 
-rav_longchange <- readRDS(paste0(pre, "VolSumms/rav_longchg_rarefyP100.rds")) %>% 
-  do.call(rbind, .)
-
-longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
-                    cbind(Study = "Student Microbiome Project (Gut)", smp_longchange),  
-                    cbind(Study = "Gajer (Vaginal)", gaj_longchange),  
-                    cbind(Study = "Ravel (Vaginal)", rav_longchange))%>% 
-  mutate(TimeLag = factor(paste0(NominalLag, " day"), 
-                          levels = c("1 day", "3 day", "7 day", "28 day"))) %>% 
-  select(Study, TimeLag, taxID, changeID, subjID, AdditiveChg, NZLogFC, CLRChg, AvgTaxAbund) %>% 
+# Long-format changes
+longchg_all <- readRDS(paste0(pre, "VolSumms/vol_long_day7_allstudy_allrarefy.rds")) %>% 
+  select(Study, Rarefy, taxID, changeID, subjID, AdditiveChg, NZLogFC, CLRChg, AvgTaxAbund) %>% 
   mutate(TaxAbundCat = cut(AvgTaxAbund, c(0, 1e-5, 1e-4, 1e-3, 1), include.lowest=T)) %>% 
-  group_by(Study, TimeLag, TaxAbundCat) %>% 
+  group_by(Study, Rarefy, TaxAbundCat) %>% 
   summarize(sdAddChg = sd(AdditiveChg), 
             sdLogFC = sd(NZLogFC, na.rm=T), 
             sdCLR = sd(CLRChg)) %>% 
@@ -32,13 +18,16 @@ longfc_all <- rbind(cbind(Study = "Moving Pictures (Gut)", mp_longchange),
                                      ChangeMeasure == "sdCLR" ~ "CLR-Based"))
   
   
-longfc_all %>% 
+longchg_all %>% 
     mutate(Study = factor(Study, levels = c("Moving Pictures (Gut)", 
                                             "Student Microbiome Project (Gut)", 
                                             "Gajer (Vaginal)", 
-                                            "Ravel (Vaginal)"))) %>% 
-  mutate(MeasureOfChange = factor(MeasureOfChange, levels = c("Additive", "Log Fold Change", "CLR-Based"))) %>% 
-  ggplot(aes(x=TaxAbundCat, y=ChangeSD, fill=TimeLag)) + 
+                                            "Ravel (Vaginal)")), 
+           MeasureOfChange = factor(MeasureOfChange, levels = c("Additive", 
+                                                              "Log Fold Change", 
+                                                              "CLR-Based")), 
+           Rarefy = factor(Rarefy, levels = c("None", "P100", "P80", "P60"))) %>% 
+  ggplot(aes(x=TaxAbundCat, y=ChangeSD, fill=Rarefy)) + 
   geom_bar(stat="identity", position="dodge") + 
   facet_grid(cols=vars(Study), rows=vars(MeasureOfChange), scales="free_y") + 
   scale_x_discrete(guide = guide_axis(n.dodge=2)) + 
