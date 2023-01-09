@@ -7,7 +7,7 @@ HELPER FUNCTIONS: Volatility calculating functions
     > summMicrobiomeVolatility() summarizes result of calcMicrobiomeChanges by averaging across all time point pairs for the same taxon 
     > longMicrobiomeChanges() converts result of calcMicrobiomeChanges into long format (one row per taxon/time pair)
 
-STAGE 1: Analyses_TimeLag_VolCalcs.R 
+STAGE 1: Gen_TimeLag_VolCalcs.R 
 - Rarefies to 100% of minimum read count per study  
 - Calculates lists (one element per time lag) of data frames of volatility measures 
     > "vol_all" contains taxon-level measures averaged across time points (abs additive, mult nonzer, log FC, prop qual change, taxon abundance) 
@@ -24,13 +24,21 @@ STAGE 2: Summaries and plots/tables for each measure of change
 
 Same helper functions (no new helper functions for rarefactions) 
 
-STAGE 1: Analyses_Rarefactions_VolCalcs.R 
+STAGE 1: Gen_Rarefactions_VolCalcs.R 
 - Rarefies to 60%, 80%, or 100% of minimum read count for the study (or no rarefaction) 
 - Saves a list-of-dataframes per rarefaction/dataset/etc. in VolSumms 
 
 STAGE 2: Combine rarefactions 
-- Analyses_Rarefactions_CombiningData_TaxLevel.R
-- Analyses_Rarefactions_CombiningData_DistLevel.R
+- Prep_Rarefactions_CombiningData_Long.R
+- Prep_Rarefactions_CombiningData_DistLevel.R
 
 STAGE 3: Summaries and plots/tables 
-- Files named like "Analyses_Rarefactions_XXXChg.R"
+- Files named like "Analyses_Rarefactions_XXXChg.R" (for qualitative & distance) 
+- Files named like "Analyses_Rarefactions_Combined_*.R" (for additive, log FC, and CLR standard deviations)
+
+
+
+*** Residual Read Count Effect Analyses *** 
+
+Analyses_Rarefactions_AssocVolWithReadCt_Plots.R contains all code 
+
